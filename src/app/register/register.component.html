@@ -6,11 +6,26 @@
     <form class="form-horizontal" [formGroup]="customerForm" (ngSubmit)="save()">
         <div class="form-group">
             <label for="firstName">First Name:</label>
-            <input type="email" class="form-control" id="firstName" placeholder="First Name (required)" formControlName="firstName">
+            <input type="email" class="form-control" id="firstName" placeholder="First Name (required)" formControlName="firstName"
+            [ngClass]="{'is-invalid': (customerForm.get('firstName').touched || customerForm.get('firstName').dirty) && !customerForm.get('firstName').valid}">
+            <span class="invalid-feedback">
+              <span *ngIf="customerForm.get('firstName').errors?.required">
+                Please enter First Name
+              </span>
+              <span *ngIf="customerForm.get('firstName').errors?.minlength">
+                  First Name should be more than 3 characters.
+                </span>
+            </span>
         </div>
         <div class="form-group">
           <label for="lastName">Last Name:</label>
-          <input type="email" class="form-control" id="lastName" placeholder="Last Name (required)" formControlName="lastName">
+          <input type="email" class="form-control" id="lastName" placeholder="Last Name (required)" formControlName="lastName"
+          [ngClass]="{'is-invalid': (customerForm.get('lastName').touched || customerForm.get('lastName').dirty) && !customerForm.get('lastName').valid}">
+          <span class="invalid-feedback">
+              <span *ngIf="customerForm.get('lastName').errors?.required">
+                Please enter Last Name
+              </span>
+            </span>
         </div>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" id="subscribe" formControlName="subscribe">
@@ -18,7 +33,13 @@
         </div>
         <div class="form-group">
             <label for="address">Address</label>
-            <input type="text" class="form-control" id="address" placeholder="Address 1" formControlName="address">
+            <input type="text" class="form-control" id="address" placeholder="Address 1" formControlName="address"
+            [ngClass]="{'is-invalid': (customerForm.get('address').touched || customerForm.get('address').dirty) && !customerForm.get('address').valid}">
+            <span class="invalid-feedback">
+                <span *ngIf="customerForm.get('address').errors?.required">
+                  Please Provide Address Line 1
+                </span>
+              </span>
           </div>
           <div class="form-group">
             <label for="address2">Address 2</label>
@@ -27,28 +48,55 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="city" name="city">City</label>
-              <input type="text" class="form-control" id="city"  formControlName="city">
+              <input type="text" class="form-control" id="city"  formControlName="city"
+              [ngClass]="{'is-invalid': (customerForm.get('city').touched || customerForm.get('city').dirty) && !customerForm.get('city').valid}">
+              <span class="invalid-feedback">
+                  <span *ngIf="customerForm.get('city').errors?.required">
+                    Please Enter City
+                  </span>
+                </span>
             </div>
             <div class="form-group col-md-4">
               <label for="state">State</label>
-              <select id="state" class="form-control"  formControlName="state">
+              <select id="state" class="form-control"  formControlName="state"
+              [ngClass]="{'is-invalid': (customerForm.get('state').touched || customerForm.get('state').dirty) && !customerForm.get('state').valid}">
                 <option selected>Choose...</option>
-                <option>...</option>
+                <option *ngFor="let s of states">{{s}}</option>
               </select>
+              <span class="invalid-feedback">
+                  <span *ngIf="customerForm.get('state').errors?.required">
+                    Please Select a State
+                  </span>
+                </span>
             </div>
             <div class="form-group col-md-2">
               <label for="zip">Zip</label>
-              <input type="text" class="form-control" id="zip" formControlName="zip">
+              <input type="text" class="form-control" id="zip" formControlName="zip"
+              [ngClass]="{'is-invalid': (customerForm.get('zip').touched || customerForm.get('zip').dirty) && !customerForm.get('zip').valid}">
+              <span class="invalid-feedback">
+                  <span *ngIf="customerForm.get('zip').errors?.required">
+                    Please enter Zip Code
+                  </span>
+                </span>
             </div>
           </div>
           <div class="form-row">
               <div class="form-group col-md-2">
                   <label for="primaryPhoneNumber">Phone Number</label>
-                  <input type="text" class="form-control" id="primaryPhoneNumber" formControlName="primaryPhoneNumber">
+                  <input type="text" class="form-control" id="primaryPhoneNumber" formControlName="primaryPhoneNumber"
+                  [ngClass]="{'is-invalid': (customerForm.get('primaryPhoneNumber').touched || customerForm.get('primaryPhoneNumber').dirty) && !customerForm.get('primaryPhoneNumber').valid}">
+                  <span class="invalid-feedback">
+                      <span *ngIf="customerForm.get('primaryPhoneNumber').errors?.required">
+                        Please enter Phone Number
+                      </span>
+                      <span *ngIf="customerForm.get('primaryPhoneNumber').errors?.pattern">
+                          Please Valid Phone Number
+                        </span>
+                    </span>
                 </div>
           </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="button" class="btn btn-default" (click)="populateTestData()">Test Data</button>
     </form>
   </div>
+
 </div>

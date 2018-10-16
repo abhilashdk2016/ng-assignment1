@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Customer } from '../models/customer';
 
 @Component({
@@ -8,6 +8,7 @@ import { Customer } from '../models/customer';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  states = ['Karnataka', 'Andhra Pradesh', 'Kerala', 'Tamil Nadu', 'Maharastra'];
   customerForm: FormGroup;
   customer: Customer = new Customer();
 
@@ -19,15 +20,15 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.customerForm = this.fb.group({
-      firstName: '',
-      lastName: '',
-      address: '',
-      address2: '',
-      city: '',
-      state: '',
+      firstName: ['', [Validators.required, Validators.minLength(4)]],
+      lastName: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      address2: [''],
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required]],
       subscribe: true,
-      primaryPhoneNumber: '',
-      zip: ''
+      primaryPhoneNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      zip: ['', [Validators.required]]
     });
     /*this.customerForm = new FormGroup({
       firstName: new FormControl(),
@@ -41,19 +42,5 @@ export class RegisterComponent implements OnInit {
       zip: new FormControl()
     });*/
   }
-
-  populateTestData() {
-    this.customerForm.setValue({
-      firstName: 'Abhilash',
-      lastName: 'D K',
-      address: 'Hoodi',
-      address2: 'Mahadevapura',
-      city: 'Bengaluru',
-      state: 'Karnataka',
-      subscribe: true,
-      primaryPhoneNumber: '8861188582',
-      zip: '560048'
-    });
-  }
-
 }
+
