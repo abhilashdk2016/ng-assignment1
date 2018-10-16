@@ -81,16 +81,29 @@
             </div>
           </div>
           <div class="form-row">
+              <div class="form-group col-md-4">
+                  <label for="email">Email</label>
+                  <input type="text" class="form-control" id="email" formControlName="email"
+                  [ngClass]="{'is-invalid': (customerForm.get('email').touched || customerForm.get('email').dirty) && !customerForm.get('email').valid}">
+                  <span class="invalid-feedback">
+                      <span *ngIf="customerForm.get('email').errors?.required">
+                        Please Enter Email ID
+                      </span>
+                      <span *ngIf="customerForm.get('email').errors?.email">
+                          Please Enter Valid Email ID
+                        </span>
+                    </span>
+                </div>
               <div class="form-group col-md-2">
                   <label for="primaryPhoneNumber">Phone Number</label>
                   <input type="text" class="form-control" id="primaryPhoneNumber" formControlName="primaryPhoneNumber"
                   [ngClass]="{'is-invalid': (customerForm.get('primaryPhoneNumber').touched || customerForm.get('primaryPhoneNumber').dirty) && !customerForm.get('primaryPhoneNumber').valid}">
                   <span class="invalid-feedback">
                       <span *ngIf="customerForm.get('primaryPhoneNumber').errors?.required">
-                        Please enter Phone Number
+                        Please Enter Phone Number
                       </span>
                       <span *ngIf="customerForm.get('primaryPhoneNumber').errors?.pattern">
-                          Please Valid Phone Number
+                          Please Enter Valid Phone Number
                         </span>
                     </span>
                 </div>

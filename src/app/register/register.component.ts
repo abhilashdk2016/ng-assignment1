@@ -1,6 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Customer } from '../models/customer';
+
+function ratingRange(min: number, max: number): ValidatorFn {
+  return (c: AbstractControl): {[key: string]: boolean} | null => {
+    if (c.value !== undefined && (isNaN(c.value) || c.value < min || c.value > max)) {
+      return { 'range': true};
+    }
+    return null;
+  };
+
+}
 
 @Component({
   selector: 'app-register',
@@ -28,6 +38,7 @@ export class RegisterComponent implements OnInit {
       state: ['', [Validators.required]],
       subscribe: true,
       primaryPhoneNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      email: ['', [Validators.required, Validators.email]],
       zip: ['', [Validators.required]]
     });
     /*this.customerForm = new FormGroup({
