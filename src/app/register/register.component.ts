@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, ValidatorFn, AbstractControl, FormArray } from '@angular/forms';
 import { Customer } from '../models/customer';
+import { SharedService } from '../shared.service';
+import { Router } from '@angular/router';
+
 
 function ratingRange(min: number, max: number): ValidatorFn {
   return (c: AbstractControl): {[key: string]: boolean} | null => {
@@ -21,11 +24,36 @@ export class RegisterComponent implements OnInit {
   states = ['Karnataka', 'Andhra Pradesh', 'Kerala', 'Tamil Nadu', 'Maharastra'];
   customerForm: FormGroup;
   customer: Customer = new Customer();
-
-  constructor(private fb: FormBuilder) { }
+  visible = true;
+  value = false;
+  onText = 'ON';
+  offText = 'OFF';
+  show = true;
+  constructor(private fb: FormBuilder, private service: SharedService, private router: Router) { }
 
   save() {
     console.log('Saved: ' + JSON.stringify(this.customerForm.value));
+    if (this.customerForm.valid) {
+      this.customer.firstName = this.customerForm.get('firstName').value;
+      this.customer.lastName = this.customerForm.get('lastName').value;
+      this.customer.email = this.customerForm.get('email').value;
+      this.customer.subscribeNewsLetter = this.customerForm.get('subscribe').value;
+      this.customer.address1 = this.customerForm.get('address').value;
+      this.customer.address2 = this.customerForm.get('address2').value;
+      this.customer.city = this.customerForm.get('city').value;
+      this.customer.state = this.customerForm.get('state').value;
+      this.customer.zip = this.customerForm.get('zip').value;
+      this.customer.phoneNumber = this.customerForm.get('primaryPhoneNumber').value;
+      this.service.setCustomer(this.customer);
+      this.router.navigate(['/details']);
+    } else {
+      this.show = false;
+      this.customerForm.setErrors({
+        invalid: true
+      });
+      console.log(this.customerForm.errors);
+      this.validateAllFormFields(this.customerForm);
+    }
   }
 
   ngOnInit() {
@@ -39,7 +67,8 @@ export class RegisterComponent implements OnInit {
       subscribe: true,
       primaryPhoneNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
       email: ['', [Validators.required, Validators.email]],
-      zip: ['', [Validators.required]]
+      zip: ['', [Validators.required]],
+      secondaryPhoneNumber: ['']
     });
     /*this.customerForm = new FormGroup({
       firstName: new FormControl(),
@@ -53,5 +82,45 @@ export class RegisterComponent implements OnInit {
       zip: new FormControl()
     });*/
   }
-}
 
+  toggle() {
+    const secondaryPhoneNumber = this.customerForm.get('secondaryPhoneNumber');
+    if (this.visible) {
+      secondaryPhoneNumber.setValidators(Validators.pattern('[0-9]{10}'));
+    } else {
+      secondaryPhoneNumber.clearValidators();
+    }
+    secondaryPhoneNumber.updateValueAndValidity();
+    this.visible = !this.visible;
+  }
+
+  Existing() {
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+      Object.keys(formGroup.controls).forEach(field => {
+        const control = formGroup.get(field);
+        if (control instanceof FormControl) {
+          control.markAsTouched({ onlySelf: true });
+        } else if (control instanceof FormGroup) {
+          this.validateAllFormFields(control);
+        }
+    });
+  }
+
+  getAllErrors(form: FormGroup | FormArray): { [key: string]: any; } | null {
+    let hasError = false;
+    const result = Object.keys(form.controls).reduce((acc, key) => {
+        const control = form.get(key);
+        const errors = (control instanceof FormGroup || control instanceof FormArray)
+            ? this.getAllErrors(control)
+            : control.errors;
+        if (errors) {
+            acc[key] = errors;
+            hasError = true;
+        }
+        return acc;
+    }, {} as { [key: string]: any; });
+    return hasError ? result : null;
+}
+}
