@@ -8,13 +8,17 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
 import { TemplateDrivenComponent } from './template-driven/template-driven.component';
 import { DetailComponent } from './detail/detail.component';
+import { ObjectKeysPipe } from './object-keys.pipe';
+import { ShowErrorComponent } from './show-error/show-error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     TemplateDrivenComponent,
-    DetailComponent
+    DetailComponent,
+    ObjectKeysPipe,
+    ShowErrorComponent
   ],
   imports: [
     BrowserModule,

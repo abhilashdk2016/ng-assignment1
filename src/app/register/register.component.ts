@@ -3,6 +3,7 @@ import { FormGroup, FormControl, FormBuilder, Validators, ValidatorFn, AbstractC
 import { Customer } from '../models/customer';
 import { SharedService } from '../shared.service';
 import { Router } from '@angular/router';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 function ratingRange(min: number, max: number): ValidatorFn {
@@ -86,6 +87,7 @@ export class RegisterComponent implements OnInit {
   toggle() {
     const secondaryPhoneNumber = this.customerForm.get('secondaryPhoneNumber');
     if (this.visible) {
+      this.show = true;
       secondaryPhoneNumber.setValidators(Validators.pattern('[0-9]{10}'));
     } else {
       secondaryPhoneNumber.clearValidators();
@@ -108,7 +110,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  getAllErrors(form: FormGroup | FormArray): { [key: string]: any; } | null {
+  getAllErrors(form: FormGroup | FormArray): any | null {
     let hasError = false;
     const result = Object.keys(form.controls).reduce((acc, key) => {
         const control = form.get(key);
@@ -121,6 +123,9 @@ export class RegisterComponent implements OnInit {
         }
         return acc;
     }, {} as { [key: string]: any; });
+    if (hasError) {
+      console.log(result);
+    }
     return hasError ? result : null;
 }
 }

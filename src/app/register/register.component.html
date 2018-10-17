@@ -4,8 +4,10 @@
   </div>
 
   <div class="card-body">
-    <div class="alert alert-danger" *ngIf="customerForm.errors && !show">
-     {{getAllErrors(customerForm) | json }}
+    <div *ngIf="customerForm.errors && !show">
+    <div *ngFor="let a of getAllErrors(customerForm) | objectKeys">
+     <app-show-error [data]="a"></app-show-error>
+    </div>
     </div>
     <form class="form-horizontal" [formGroup]="customerForm" (ngSubmit)="save()">
         <div class="form-group">

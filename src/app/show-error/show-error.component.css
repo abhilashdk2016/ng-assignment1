@@ -1,0 +1,13 @@
+.box {
+  border: 1px solid red;
+  border-left: 20px solid red;
+  border-radius: 3px;
+  margin: 5px;
+  width: 60%;
+  text-align: left;
+}
+
+p {
+  padding-left: 30px;
+}
+
