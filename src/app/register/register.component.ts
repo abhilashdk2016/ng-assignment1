@@ -24,17 +24,17 @@ function ratingRange(min: number, max: number): ValidatorFn {
 export class RegisterComponent implements OnInit {
   states = ['Karnataka', 'Andhra Pradesh', 'Kerala', 'Tamil Nadu', 'Maharastra'];
   customerForm: FormGroup;
+  skills: FormArray;
   customer: Customer = new Customer();
   visible = true;
-  value = false;
-  onText = 'ON';
-  offText = 'OFF';
   show = true;
   constructor(private fb: FormBuilder, private service: SharedService, private router: Router) { }
 
   save() {
-    console.log('Saved: ' + JSON.stringify(this.customerForm.value));
+    // console.log('Saved: ' + JSON.stringify(this.customerForm.value));
+    console.log('inside save');
     if (this.customerForm.valid) {
+      this.show = true;
       this.customer.firstName = this.customerForm.get('firstName').value;
       this.customer.lastName = this.customerForm.get('lastName').value;
       this.customer.email = this.customerForm.get('email').value;
@@ -52,12 +52,15 @@ export class RegisterComponent implements OnInit {
       this.customerForm.setErrors({
         invalid: true
       });
-      console.log(this.customerForm.errors);
-      this.validateAllFormFields(this.customerForm);
+      // console.log(this.customerForm.errors);
+       this.validateAllFormFields(this.customerForm);
     }
+    // this.show = !this.show;
+    console.log(`save(): this.show => ${this.show}`);
   }
 
   ngOnInit() {
+    console.log('inside init');
     this.customerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(4)]],
       lastName: ['', [Validators.required]],
@@ -69,7 +72,11 @@ export class RegisterComponent implements OnInit {
       primaryPhoneNumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
       email: ['', [Validators.required, Validators.email]],
       zip: ['', [Validators.required]],
-      secondaryPhoneNumber: ['']
+      // secondaryPhoneNumber: ['']
+      phoneGroup: this.fb.group({
+        secondaryPhoneNumber: ['']
+      }),
+      skills: this.fb.array([])
     });
     /*this.customerForm = new FormGroup({
       firstName: new FormControl(),
@@ -84,15 +91,40 @@ export class RegisterComponent implements OnInit {
     });*/
   }
 
+  createSkills(): FormGroup {
+    return this.fb.group({
+      skill: ['', Validators.required]
+    });
+  }
+
+  addSkill(): void {
+    this.skills = this.customerForm.get('skills') as FormArray;
+    this.skills.push(this.createSkills());
+  }
+
+  deleteSkill(index): void {
+    this.skills.removeAt(index);
+  }
+
   toggle() {
+    /*console.log('inside toggle');
     const secondaryPhoneNumber = this.customerForm.get('secondaryPhoneNumber');
     if (this.visible) {
-      this.show = true;
-      secondaryPhoneNumber.setValidators(Validators.pattern('[0-9]{10}'));
+      secondaryPhoneNumber.setValidators([Validators.required, Validators.pattern('[0-9]{10}')]);
     } else {
       secondaryPhoneNumber.clearValidators();
     }
     secondaryPhoneNumber.updateValueAndValidity();
+    // console.log(`toggle(): this.show => ${this.show}`);
+    this.visible = !this.visible;*/
+    const secondaryPhoneNumber = this.customerForm.get('phoneGroup').get('secondaryPhoneNumber');
+    if (this.visible) {
+      secondaryPhoneNumber.setValidators([Validators.required, Validators.pattern('[0-9]{10}')]);
+    } else {
+      secondaryPhoneNumber.clearValidators();
+    }
+    secondaryPhoneNumber.updateValueAndValidity();
+    // console.log(`toggle(): this.show => ${this.show}`);
     this.visible = !this.visible;
   }
 
@@ -123,9 +155,6 @@ export class RegisterComponent implements OnInit {
         }
         return acc;
     }, {} as { [key: string]: any; });
-    if (hasError) {
-      console.log(result);
-    }
     return hasError ? result : null;
 }
 }

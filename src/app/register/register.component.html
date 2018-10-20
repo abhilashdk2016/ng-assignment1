@@ -54,46 +54,46 @@
                   Please Provide Address Line 1
                 </span>
               </span>
-          </div>
-          <div class="form-group">
-            <label for="address2">Address 2</label>
-            <input type="text" class="form-control" id="address2" placeholder="Address 2" formControlName="address2">
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="city" name="city">City</label>
-              <input type="text" class="form-control" id="city"  formControlName="city"
-              [ngClass]="{'is-invalid': (customerForm.get('city').touched || customerForm.get('city').dirty) && !customerForm.get('city').valid}">
-              <span class="invalid-feedback">
-                  <span *ngIf="customerForm.get('city').errors?.required && show">
-                    Please Enter City
-                  </span>
+        </div>
+        <div class="form-group">
+          <label for="address2">Address 2</label>
+          <input type="text" class="form-control" id="address2" placeholder="Address 2" formControlName="address2">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="city" name="city">City</label>
+            <input type="text" class="form-control" id="city" formControlName="city"
+            [ngClass]="{'is-invalid': (customerForm.get('city').touched || customerForm.get('city').dirty) && !customerForm.get('city').valid}">
+            <span class="invalid-feedback">
+                <span *ngIf="customerForm.get('city').errors?.required && show">
+                  Please Enter City
                 </span>
-            </div>
-            <div class="form-group col-md-4">
-              <label for="state">State</label>
-              <select id="state" class="form-control"  formControlName="state"
-              [ngClass]="{'is-invalid': (customerForm.get('state').touched || customerForm.get('state').dirty) && !customerForm.get('state').valid}">
-                <option selected>Choose...</option>
-                <option *ngFor="let s of states">{{s}}</option>
-              </select>
-              <span class="invalid-feedback">
-                  <span *ngIf="customerForm.get('state').errors?.required && show">
-                    Please Select a State
-                  </span>
-                </span>
-            </div>
-            <div class="form-group col-md-2">
-              <label for="zip">Zip</label>
-              <input type="text" class="form-control" id="zip" formControlName="zip"
-              [ngClass]="{'is-invalid': (customerForm.get('zip').touched || customerForm.get('zip').dirty) && !customerForm.get('zip').valid}">
-              <span class="invalid-feedback">
-                  <span *ngIf="customerForm.get('zip').errors?.required && show">
-                    Please enter Zip Code
-                  </span>
-                </span>
-            </div>
+              </span>
           </div>
+          <div class="form-group col-md-4">
+            <label for="state">State</label>
+            <select id="state" class="form-control"  formControlName="state"
+            [ngClass]="{'is-invalid': (customerForm.get('state').touched || customerForm.get('state').dirty) && !customerForm.get('state').valid}">
+              <option selected>Choose...</option>
+              <option *ngFor="let s of states">{{s}}</option>
+            </select>
+            <span class="invalid-feedback">
+                <span *ngIf="customerForm.get('state').errors?.required && show">
+                  Please Select a State
+                </span>
+              </span>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="zip">Zip</label>
+            <input type="text" class="form-control" id="zip" formControlName="zip"
+            [ngClass]="{'is-invalid': (customerForm.get('zip').touched || customerForm.get('zip').dirty) && !customerForm.get('zip').valid}">
+            <span class="invalid-feedback">
+                <span *ngIf="customerForm.get('zip').errors?.required && show">
+                  Please enter Zip Code
+                </span>
+              </span>
+          </div>
+        </div>
           <div class="form-row">
               <div class="form-group col-md-4">
                   <label for="email">Email</label>
@@ -108,6 +108,7 @@
                         </span>
                     </span>
                 </div>
+              
               <div class="form-group col-md-2">
                   <label for="primaryPhoneNumber">Phone Number</label>
                   <input type="text" class="form-control" id="primaryPhoneNumber" formControlName="primaryPhoneNumber"
@@ -121,23 +122,38 @@
                         </span>
                     </span>
                 </div>
-                <div class="form-group col-md-2" [hidden]="!visible">
-                  <button (click)="toggle()" class="btn btn-link" title="Add Another Phone Number"><span class="fa fa-phone" ></span></button>
+                <div class="form-group col-md-2 col-xs-1" [hidden]="!visible">
+                  <button (click)="toggle()" class="btn btn-link" title="Add Another Phone Number" type="button"><span class="fa fa-phone" ></span></button>
                 </div>
-                <div class="form-group col-md-2" [hidden]="visible">
-                    <label for="secondaryPhoneNumber">Second Phone Number</label>
+                <div class="form-group col-md-2" [hidden]="visible" formGroupName="phoneGroup">
+                    <label for="secondaryPhoneNumber">Phone Number 2</label>
                     <input type="text" class="form-control" id="secondaryPhoneNumber" formControlName="secondaryPhoneNumber"
-                    [ngClass]="{'is-invalid': (customerForm.get('secondaryPhoneNumber').touched || customerForm.get('secondaryPhoneNumber').dirty) && !customerForm.get('secondaryPhoneNumber').valid}">
+                    [ngClass]="{'is-invalid': (customerForm.get('phoneGroup').get('secondaryPhoneNumber').touched || customerForm.get('phoneGroup').get('secondaryPhoneNumber').dirty) && !customerForm.get('phoneGroup').get('secondaryPhoneNumber').valid}">
                     <span id="searchclear" class="fa fa-times" (click)="toggle()"></span>
                     <span class="invalid-feedback">
-                        <span *ngIf="customerForm.get('secondaryPhoneNumber').errors?.required && show">
+                        <span *ngIf="customerForm.get('phoneGroup').get('secondaryPhoneNumber').errors?.required && show">
                           Please Enter Phone Number
                         </span>
-                        <span *ngIf="customerForm.get('secondaryPhoneNumber').errors?.pattern && show">
+                        <span *ngIf="customerForm.get('phoneGroup').get('secondaryPhoneNumber').errors?.pattern && show">
                             Please Enter Valid Phone Number
                           </span>
                       </span>
-                  </div>
+                    </div>
+          </div>
+          <div class="form-row" formArrayName="skills">
+            <label>Skills:</label>
+            <div *ngFor="let item of customerForm.get('skills').controls; let i = index;" 
+            class="form-group col-md-2" [formGroupName]="i">
+                <input formControlName="skill" class="form-control" 
+                [ngClass]="{'is-invalid': (item.touched || item.dirty) && !item.valid}"/>
+                <span id="searchclear" class="fa fa-times skill" (click)="deleteSkill(i)"></span>
+                <span class="invalid-feedback">
+                    <span *ngIf="!item.valid && show">
+                      Please Enter Skill
+                    </span>
+                  </span>
+            </div>
+            <button (click)="addSkill()" class="btn btn-link" title="Add Skill" type="button"><span class="fa fa-plus" ></span></button>
           </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
